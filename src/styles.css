@@ -150,47 +150,6 @@ button {
   touch-action: none;
 }
 
-.gesture-hint {
-  position: absolute;
-  left: 50%;
-  bottom: 30px;
-  transform: translateX(-50%);
-  padding: 9px 14px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: rgba(3, 9, 17, 0.68);
-  color: #a9cfe5;
-  font-size: 13px;
-  white-space: nowrap;
-  backdrop-filter: blur(12px);
-}
-
-.solar-readout {
-  position: absolute;
-  z-index: 7;
-  left: 28px;
-  bottom: 28px;
-  display: grid;
-  gap: 4px;
-  min-width: 178px;
-  padding: 11px 13px;
-  border: 1px solid rgba(255, 230, 111, 0.34);
-  border-radius: 8px;
-  background: rgba(8, 12, 18, 0.66);
-  backdrop-filter: blur(14px);
-}
-
-.solar-readout span {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.solar-readout strong {
-  color: var(--gold);
-  font-size: 14px;
-  font-variant-numeric: tabular-nums;
-}
-
 .globe-label button {
   min-width: 106px;
   height: 34px;
@@ -206,13 +165,66 @@ button {
   right: 28px;
   bottom: 28px;
   z-index: 8;
-  width: min(420px, calc(100vw - 56px));
-  padding: 22px;
+  display: flex;
+  width: min(640px, calc(100vw - 56px));
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--panel);
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
   backdrop-filter: blur(22px);
+  overflow: hidden;
+}
+
+.country-panel__main {
+  flex: 0 0 420px;
+  max-width: 420px;
+  padding: 22px;
+}
+
+.country-panel__source {
+  width: 0;
+  padding: 0;
+  border-left: 0 solid rgba(97, 203, 255, 0.14);
+  overflow: hidden;
+  opacity: 0;
+  transition: width 0.24s ease, padding 0.24s ease, opacity 0.18s ease, border-left-width 0.24s ease;
+}
+
+.country-panel__source.is-open {
+  width: 220px;
+  padding: 22px 18px 22px 0;
+  border-left-width: 1px;
+  opacity: 1;
+}
+
+.country-panel__source-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--gold);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.panel-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  z-index: 2;
+  display: inline-flex;
+  width: 28px;
+  height: 84px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-left: 1px solid rgba(97, 203, 255, 0.18);
+  background: rgba(12, 20, 31, 0.92);
+  color: #a9cfe5;
+  transform: translateY(-50%);
+}
+
+.country-panel--expanded .panel-toggle {
+  right: 220px;
 }
 
 .country-panel__heading {
@@ -253,6 +265,17 @@ button {
   background: rgba(55, 227, 255, 0.07);
 }
 
+.live-debt--compact {
+  margin-bottom: 16px;
+}
+
+.live-debt__headline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
 .live-debt::after {
   content: "";
   position: absolute;
@@ -280,7 +303,7 @@ button {
 .live-debt strong {
   display: block;
   color: var(--gold);
-  font-size: clamp(25px, 3.4vw, 37px);
+  font-size: clamp(20px, 2.2vw, 28px);
   line-height: 1;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0;
@@ -300,6 +323,14 @@ button {
   font-variant-numeric: tabular-nums;
 }
 
+.live-debt__delta {
+  flex: 0 0 auto;
+  margin-top: 0;
+  white-space: nowrap;
+  color: #dff9ff;
+  font-weight: 700;
+}
+
 .live-debt em i {
   width: 8px;
   height: 8px;
@@ -311,9 +342,8 @@ button {
 }
 
 .rolling-debt {
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .metric-grid {
@@ -572,12 +602,42 @@ button {
     bottom: auto;
     width: auto;
     margin: 0 18px 18px;
+    flex-direction: column;
   }
 
-  .solar-readout {
-    left: 18px;
-    bottom: auto;
-    top: 150px;
+  .country-panel__main {
+    flex: 1 1 auto;
+    max-width: none;
+  }
+
+  .country-panel__source {
+    width: 100%;
+    max-height: 0;
+    padding: 0 22px;
+    border-left: 0;
+    border-top: 0 solid rgba(97, 203, 255, 0.14);
+  }
+
+  .country-panel__source.is-open {
+    width: 100%;
+    max-height: 240px;
+    padding: 0 22px 22px;
+    border-top-width: 1px;
+  }
+
+  .panel-toggle {
+    top: auto;
+    right: 22px;
+    bottom: 22px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(97, 203, 255, 0.18);
+    transform: none;
+    border-radius: 8px;
+  }
+
+  .country-panel--expanded .panel-toggle {
+    right: 22px;
   }
 
   .detail-mode,
@@ -629,9 +689,9 @@ button {
     font-size: clamp(20px, 6vw, 29px);
   }
 
-  .gesture-hint {
-    bottom: 12px;
-    font-size: 12px;
+  .live-debt__headline {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
 

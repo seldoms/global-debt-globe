@@ -5,7 +5,6 @@ import * as THREE from "three";
 import type { DebtCountry } from "../data/countries";
 import {
   calculateSubsolarPoint,
-  formatSolarCoordinate,
   subsolarPointToVector,
   type SubsolarPoint,
 } from "../lib/solar";
@@ -268,14 +267,6 @@ export function GlobeScene({
           maxDistance={8.6}
         />
       </Canvas>
-      <div className="solar-readout">
-        <span>太阳直射点</span>
-        <strong>
-          {formatSolarCoordinate(subsolarPoint.latitude, "lat")} ·{" "}
-          {formatSolarCoordinate(subsolarPoint.longitude, "lng")}
-        </strong>
-      </div>
-      <div className="gesture-hint">拖拽旋转 · 滚轮缩放 · 双击国家进入图表</div>
     </div>
   );
 }

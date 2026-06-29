@@ -26,6 +26,43 @@ export function estimateLiveDebtUsd({
   );
 }
 
+export function estimatePersistedLiveDebtUsd({
+  baseDebtTrillionsUsd,
+  yearlyDeltaTrillionsUsd,
+  snapshotDate,
+  persistedDebtUsd,
+  persistedAt,
+  now = new Date(),
+}: {
+  baseDebtTrillionsUsd: number;
+  yearlyDeltaTrillionsUsd: number;
+  snapshotDate: string;
+  persistedDebtUsd?: number;
+  persistedAt?: string;
+  now?: Date;
+}): number {
+  const baseline = estimateLiveDebtUsd({
+    baseDebtTrillionsUsd,
+    yearlyDeltaTrillionsUsd,
+    snapshotDate,
+    now,
+  });
+
+  if (!persistedDebtUsd || !persistedAt) {
+    return baseline;
+  }
+
+  const persistedElapsedSeconds = Math.max(
+    0,
+    (now.getTime() - new Date(persistedAt).getTime()) / 1000,
+  );
+  const continued = Math.round(
+    persistedDebtUsd + persistedElapsedSeconds * yearlyDeltaToPerSecond(yearlyDeltaTrillionsUsd),
+  );
+
+  return Math.max(baseline, continued);
+}
+
 export function formatCurrencyTrillions(value: number): string {
   return `${value.toFixed(2)} 万亿美元`;
 }

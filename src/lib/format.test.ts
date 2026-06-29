@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   estimateLiveDebtUsd,
+  estimatePersistedLiveDebtUsd,
   formatCurrencyTrillions,
   formatDebtTrillions,
   formatFullUsd,
@@ -32,6 +33,19 @@ describe("debt formatting helpers", () => {
         now: new Date("2026-01-01T00:00:10Z"),
       }),
     ).toBe(1_000_000_100_000);
+  });
+
+  it("continues counting from persisted local state when it is newer than the snapshot baseline", () => {
+    expect(
+      estimatePersistedLiveDebtUsd({
+        baseDebtTrillionsUsd: 1,
+        yearlyDeltaTrillionsUsd: 0.31536,
+        snapshotDate: "2026-01-01T00:00:00Z",
+        persistedDebtUsd: 1_000_000_500_000,
+        persistedAt: "2026-01-01T00:00:50Z",
+        now: new Date("2026-01-01T00:01:00Z"),
+      }),
+    ).toBe(1_000_000_600_000);
   });
 
   it("formats ratio percentages", () => {
