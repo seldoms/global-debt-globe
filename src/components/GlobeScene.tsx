@@ -19,6 +19,10 @@ type GlobeSceneProps = {
 };
 
 const globeRadius = 1.82;
+const markerWidth = 0.052;
+const selectedMarkerWidth = 0.075;
+const markerBaseWidth = 0.078;
+const selectedMarkerBaseWidth = 0.11;
 
 function latLngToVector3(latitude: number, longitude: number, radius: number) {
   const phi = (90 - latitude) * (Math.PI / 180);
@@ -95,7 +99,13 @@ function DebtMarker({
           onOpenDetail(country);
         }}
       >
-        <boxGeometry args={[selected ? 0.11 : 0.08, animatedHeight, selected ? 0.11 : 0.08]} />
+        <boxGeometry
+          args={[
+            selected ? selectedMarkerWidth : markerWidth,
+            animatedHeight,
+            selected ? selectedMarkerWidth : markerWidth,
+          ]}
+        />
         <meshStandardMaterial
           color={color}
           emissive={color}
@@ -108,7 +118,13 @@ function DebtMarker({
         position={position.clone().add(normal.clone().multiplyScalar(0.006))}
         quaternion={quaternion}
       >
-        <boxGeometry args={[selected ? 0.16 : 0.12, 0.012, selected ? 0.16 : 0.12]} />
+        <boxGeometry
+          args={[
+            selected ? selectedMarkerBaseWidth : markerBaseWidth,
+            0.012,
+            selected ? selectedMarkerBaseWidth : markerBaseWidth,
+          ]}
+        />
         <meshStandardMaterial
           color={selected ? "#fff3a8" : "#71f1ff"}
           emissive={color}

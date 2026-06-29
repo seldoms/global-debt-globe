@@ -8,8 +8,16 @@ export function perSecondToYearlyDeltaTrillions(perSecondUsd: number): number {
   return (perSecondUsd * SECONDS_PER_YEAR) / 1_000_000_000_000;
 }
 
-export function estimateSecondTickerUsd(perSecondUsd: number, now = new Date()): number {
-  return Math.floor(perSecondUsd * (now.getMilliseconds() / 1000));
+export function estimateDebtTickUsd(
+  perSecondUsd: number,
+  elapsedMilliseconds: number,
+): number {
+  const boundedElapsedMilliseconds = Math.min(
+    1000,
+    Math.max(0, elapsedMilliseconds),
+  );
+
+  return Math.round(perSecondUsd * (boundedElapsedMilliseconds / 1000));
 }
 
 export function estimateLiveDebtUsd({

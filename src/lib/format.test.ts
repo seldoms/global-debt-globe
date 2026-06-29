@@ -3,7 +3,7 @@ import {
   estimateLiveDebtFromUsdSource,
   estimateLiveDebtUsd,
   estimatePersistedLiveDebtUsd,
-  estimateSecondTickerUsd,
+  estimateDebtTickUsd,
   formatDebtCompactZh,
   formatCurrencyTrillions,
   formatDebtTrillions,
@@ -27,10 +27,10 @@ describe("debt formatting helpers", () => {
     expect(formatDebtPerSecond(10000)).toBe("10,000 美元/秒");
   });
 
-  it("estimates the rolling amount accrued within the current second", () => {
-    expect(estimateSecondTickerUsd(10000, new Date("2026-01-01T00:00:00.000Z"))).toBe(0);
-    expect(estimateSecondTickerUsd(10000, new Date("2026-01-01T00:00:00.250Z"))).toBe(2500);
-    expect(estimateSecondTickerUsd(10000, new Date("2026-01-01T00:00:00.999Z"))).toBe(9990);
+  it("estimates the debt added during the current UI tick", () => {
+    expect(estimateDebtTickUsd(10000, 80)).toBe(800);
+    expect(estimateDebtTickUsd(10000, 250)).toBe(2500);
+    expect(estimateDebtTickUsd(10000, 5000)).toBe(10000);
   });
 
   it("estimates live debt from the snapshot date instead of page load time", () => {

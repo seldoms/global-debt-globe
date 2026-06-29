@@ -1,12 +1,12 @@
 import { ArrowUpRight, X } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { DebtCountry } from "../data/countries";
 import {
   estimatePersistedCountryDebtUsd,
   getDebtPerSecondUsd,
 } from "../lib/debt";
 import {
-  estimateSecondTickerUsd,
+  estimateDebtTickUsd,
   formatCurrencyTrillions,
   formatDebtCompactZh,
   formatPercent,
@@ -24,8 +24,9 @@ export function GlobeDebtCard({
   onOpenDetail: () => void;
 }) {
   const perSecond = useMemo(() => getDebtPerSecondUsd(country), [country]);
+  const lastTickAtRef = useRef<number | null>(null);
   const [liveDebtUsd, setLiveDebtUsd] = useState(() => country.debtTrillionsUsd * 1_000_000_000_000);
-  const [secondTickerUsd, setSecondTickerUsd] = useState(() => estimateSecondTickerUsd(perSecond));
+  const [secondTickerUsd, setSecondTickerUsd] = useState(() => estimateDebtTickUsd(perSecond, 80));
 
   useEffect(() => {
     const storageKey = `${STORAGE_PREFIX}${country.iso2}`;
@@ -50,9 +51,12 @@ export function GlobeDebtCard({
         persistedDebtUsd,
         persistedAt,
       });
+      const tickedAt = Date.now();
+      const elapsedMilliseconds = lastTickAtRef.current === null ? 80 : tickedAt - lastTickAtRef.current;
+      lastTickAtRef.current = tickedAt;
 
       setLiveDebtUsd(nextDebtUsd);
-      setSecondTickerUsd(estimateSecondTickerUsd(perSecond));
+      setSecondTickerUsd(estimateDebtTickUsd(perSecond, elapsedMilliseconds));
 
       try {
         window.localStorage.setItem(
@@ -69,7 +73,10 @@ export function GlobeDebtCard({
 
     updateLiveDebt();
     const timer = window.setInterval(updateLiveDebt, 80);
-    return () => window.clearInterval(timer);
+    return () => {
+      lastTickAtRef.current = null;
+      window.clearInterval(timer);
+    };
   }, [country, perSecond]);
 
   const liveDebtTrillions = liveDebtUsd / 1_000_000_000_000;
