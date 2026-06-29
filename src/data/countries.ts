@@ -5,6 +5,15 @@ export type DebtCompositionItem = {
   note: string;
 };
 
+export type LiveDebtSource = {
+  provider: string;
+  url: string;
+  sourceLabel: string;
+  baseDebtUsd: number;
+  perSecondUsd: number;
+  snapshotDate: string;
+};
+
 export type DebtCountry = {
   rank: number;
   name: string;
@@ -23,6 +32,7 @@ export type DebtCountry = {
   snapshotDate: string;
   sourceYear: string;
   sourceNote: string;
+  liveSource?: LiveDebtSource;
   composition: DebtCompositionItem[];
 };
 
@@ -71,16 +81,24 @@ export const countries: DebtCountry[] = [
     latitude: 38.9,
     longitude: -77,
     gdpTrillionsUsd: 29.18,
-    debtTrillionsUsd: 36.22,
-    debtToGdpPercent: 124.1,
-    yearlyDebtDeltaTrillionsUsd: 1.82,
+    debtTrillionsUsd: 39.31,
+    debtToGdpPercent: 134.7,
+    yearlyDebtDeltaTrillionsUsd: 1.63,
     populationMillions: 341.8,
-    debtPerCapitaUsd: 105970,
+    debtPerCapitaUsd: 115011,
     fiscalBalancePercentGdp: -6.4,
-    snapshotDate: "2025-12-31T23:59:59Z",
-    sourceYear: "2025 IMF WEO snapshot",
-    sourceNote: "GDP uses nominal current-dollar estimate; debt uses general-government gross debt where available.",
-    composition: composition(36.22, 72, 12, 10, 6),
+    snapshotDate: "2026-06-25T00:00:00Z",
+    sourceYear: "USA Debt Clock page script + 2025 IMF WEO GDP context",
+    sourceNote: "US debt uses the USA Debt Clock page-script baseline labeled as US Treasury source; GDP remains the nominal current-dollar IMF context used for cross-country comparison.",
+    liveSource: {
+      provider: "USA Debt Clock",
+      url: "https://www.usadebtclock.com/",
+      sourceLabel: "United States National Debt, page title labels source as US Treasury",
+      baseDebtUsd: 39_311_022_730_162.44,
+      perSecondUsd: 51_767.44,
+      snapshotDate: "2026-06-25T00:00:00Z",
+    },
+    composition: composition(39.31, 72, 12, 10, 6),
   },
   {
     rank: 2,
@@ -665,6 +683,7 @@ export const countries: DebtCountry[] = [
 ];
 
 export const dataSources = [
+  "USA Debt Clock: United States National Debt page-script baseline and per-second increment, labeled on the page as sourced from US Treasury.",
   "IMF World Economic Outlook: nominal GDP, general government gross debt, debt/GDP, fiscal balance, and population estimates.",
   "World Bank national accounts: GDP current-US$ cross-check for economies where IMF and national-account releases diverge.",
   "OECD and national debt offices: used as interpretive references for gross-vs-net debt caveats and institutional composition.",

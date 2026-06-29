@@ -4,6 +4,10 @@ export function yearlyDeltaToPerSecond(deltaTrillionsUsd: number): number {
   return Math.round((deltaTrillionsUsd * 1_000_000_000_000) / SECONDS_PER_YEAR);
 }
 
+export function perSecondToYearlyDeltaTrillions(perSecondUsd: number): number {
+  return (perSecondUsd * SECONDS_PER_YEAR) / 1_000_000_000_000;
+}
+
 export function estimateLiveDebtUsd({
   baseDebtTrillionsUsd,
   yearlyDeltaTrillionsUsd,
@@ -26,6 +30,25 @@ export function estimateLiveDebtUsd({
   );
 }
 
+export function estimateLiveDebtFromUsdSource({
+  baseDebtUsd,
+  perSecondUsd,
+  snapshotDate,
+  now = new Date(),
+}: {
+  baseDebtUsd: number;
+  perSecondUsd: number;
+  snapshotDate: string;
+  now?: Date;
+}): number {
+  const elapsedSeconds = Math.max(
+    0,
+    (now.getTime() - new Date(snapshotDate).getTime()) / 1000,
+  );
+
+  return Math.round(baseDebtUsd + elapsedSeconds * perSecondUsd);
+}
+
 export function estimatePersistedLiveDebtUsd({
   baseDebtTrillionsUsd,
   yearlyDeltaTrillionsUsd,
@@ -41,9 +64,10 @@ export function estimatePersistedLiveDebtUsd({
   persistedAt?: string;
   now?: Date;
 }): number {
-  const baseline = estimateLiveDebtUsd({
-    baseDebtTrillionsUsd,
-    yearlyDeltaTrillionsUsd,
+  const perSecondUsd = yearlyDeltaToPerSecond(yearlyDeltaTrillionsUsd);
+  const baseline = estimateLiveDebtFromUsdSource({
+    baseDebtUsd: baseDebtTrillionsUsd * 1_000_000_000_000,
+    perSecondUsd,
     snapshotDate,
     now,
   });
@@ -57,7 +81,7 @@ export function estimatePersistedLiveDebtUsd({
     (now.getTime() - new Date(persistedAt).getTime()) / 1000,
   );
   const continued = Math.round(
-    persistedDebtUsd + persistedElapsedSeconds * yearlyDeltaToPerSecond(yearlyDeltaTrillionsUsd),
+    persistedDebtUsd + persistedElapsedSeconds * perSecondUsd,
   );
 
   return Math.max(baseline, continued);

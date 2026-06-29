@@ -9,6 +9,7 @@ import {
   type SubsolarPoint,
 } from "../lib/solar";
 import { formatDebtCompactZh } from "../lib/format";
+import { getDisplayDebtTrillions } from "../lib/debt";
 
 type GlobeSceneProps = {
   countries: DebtCountry[];
@@ -47,7 +48,8 @@ function DebtMarker({
     [country.latitude, country.longitude],
   );
   const normal = useMemo(() => position.clone().normalize(), [position]);
-  const height = 0.08 + Math.sqrt(country.debtTrillionsUsd) * 0.085;
+  const displayDebtTrillions = useMemo(() => getDisplayDebtTrillions(country), [country]);
+  const height = 0.08 + Math.sqrt(displayDebtTrillions) * 0.085;
   const animatedHeight = Math.max(0.001, height * mountProgress);
   const midpoint = useMemo(
     () => position.clone().add(normal.clone().multiplyScalar(animatedHeight / 2)),
@@ -126,7 +128,7 @@ function DebtMarker({
               <span>{country.flag}</span>
               {country.name}
             </button>
-            <div className="globe-label__value">{formatDebtCompactZh(country.debtTrillionsUsd * mountProgress)}</div>
+            <div className="globe-label__value">{formatDebtCompactZh(displayDebtTrillions * mountProgress)}</div>
           </div>
         </Html>
       )}

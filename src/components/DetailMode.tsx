@@ -10,12 +10,12 @@ import {
 } from "recharts";
 import type { DebtCountry } from "../data/countries";
 import { dataSources } from "../data/countries";
+import { getDebtPerSecondUsd, getDisplayDebtTrillions } from "../lib/debt";
 import {
   formatCurrencyTrillions,
   formatDebtTrillions,
   formatDebtPerSecond,
   formatPercent,
-  yearlyDeltaToPerSecond,
 } from "../lib/format";
 
 const palette = ["#37e3ff", "#ffe66f", "#ff5c8a", "#8cff7a"];
@@ -33,9 +33,11 @@ export function DetailMode({
 }) {
   const comparison = countries.slice(0, 10).map((item) => ({
     name: item.name,
-    debt: -item.debtTrillionsUsd,
+    debt: -getDisplayDebtTrillions(item),
     gdp: item.gdpTrillionsUsd,
   }));
+  const displayDebtTrillions = getDisplayDebtTrillions(country);
+  const perSecond = getDebtPerSecondUsd(country);
 
   return (
     <section className="detail-mode">
@@ -67,7 +69,7 @@ export function DetailMode({
         <div className="stat-rail">
           <div>
             <span>政府负债总额</span>
-            <strong>{formatDebtTrillions(country.debtTrillionsUsd)}</strong>
+            <strong>{formatDebtTrillions(displayDebtTrillions)}</strong>
           </div>
           <div>
             <span>GDP</span>
@@ -83,7 +85,7 @@ export function DetailMode({
           </div>
           <div>
             <span>估算每秒负债增加</span>
-            <strong>-{formatDebtPerSecond(yearlyDeltaToPerSecond(country.yearlyDebtDeltaTrillionsUsd))}</strong>
+            <strong>-{formatDebtPerSecond(perSecond)}</strong>
           </div>
         </div>
 

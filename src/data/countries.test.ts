@@ -27,4 +27,16 @@ describe("country debt snapshot", () => {
       expect(total).toBe(100);
     }
   });
+
+  it("marks the United States with the USA Debt Clock live source parameters", () => {
+    const unitedStates = countries.find((country) => country.iso2 === "US");
+
+    expect(unitedStates?.liveSource).toMatchObject({
+      provider: "USA Debt Clock",
+      url: "https://www.usadebtclock.com/",
+      baseDebtUsd: 39_311_022_730_162.44,
+      perSecondUsd: 51_767.44,
+      snapshotDate: "2026-06-25T00:00:00Z",
+    });
+  });
 });

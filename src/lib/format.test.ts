@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  estimateLiveDebtFromUsdSource,
   estimateLiveDebtUsd,
   estimatePersistedLiveDebtUsd,
   formatDebtCompactZh,
@@ -34,6 +35,17 @@ describe("debt formatting helpers", () => {
         now: new Date("2026-01-01T00:00:10Z"),
       }),
     ).toBe(1_000_000_100_000);
+  });
+
+  it("estimates live debt from a dollar-denominated page-script source", () => {
+    expect(
+      estimateLiveDebtFromUsdSource({
+        baseDebtUsd: 39_311_022_730_162.44,
+        perSecondUsd: 51_767.44,
+        snapshotDate: "2026-06-25T00:00:00Z",
+        now: new Date("2026-06-25T00:00:10Z"),
+      }),
+    ).toBe(39_311_023_247_837);
   });
 
   it("continues counting from persisted local state when it is newer than the snapshot baseline", () => {

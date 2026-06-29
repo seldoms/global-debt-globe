@@ -8,12 +8,15 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import type { DebtCountry } from "../data/countries";
 import {
-  estimatePersistedLiveDebtUsd,
+  estimatePersistedCountryDebtUsd,
+  getDebtPerSecondUsd,
+  getSourceLine,
+} from "../lib/debt";
+import {
   formatCurrencyTrillions,
   formatDebtTrillions,
   formatDebtPerSecond,
   formatPercent,
-  yearlyDeltaToPerSecond,
 } from "../lib/format";
 
 const STORAGE_PREFIX = "global-debt-globe:live-debt:";
@@ -25,10 +28,7 @@ export function CountryPanel({
   country: DebtCountry;
   onOpenDetail: () => void;
 }) {
-  const perSecond = useMemo(
-    () => yearlyDeltaToPerSecond(country.yearlyDebtDeltaTrillionsUsd),
-    [country.yearlyDebtDeltaTrillionsUsd],
-  );
+  const perSecond = useMemo(() => getDebtPerSecondUsd(country), [country]);
   const [liveDebtUsd, setLiveDebtUsd] = useState(() => country.debtTrillionsUsd * 1_000_000_000_000);
   const [showSource, setShowSource] = useState(false);
 
@@ -50,10 +50,8 @@ export function CountryPanel({
         // Ignore storage parse failures.
       }
 
-      const nextDebtUsd = estimatePersistedLiveDebtUsd({
-        baseDebtTrillionsUsd: country.debtTrillionsUsd,
-        yearlyDeltaTrillionsUsd: country.yearlyDebtDeltaTrillionsUsd,
-        snapshotDate: country.snapshotDate,
+      const nextDebtUsd = estimatePersistedCountryDebtUsd({
+        country,
         persistedDebtUsd,
         persistedAt,
       });
@@ -76,7 +74,7 @@ export function CountryPanel({
     updateLiveDebt();
     const timer = window.setInterval(updateLiveDebt, 80);
     return () => window.clearInterval(timer);
-  }, [country.debtTrillionsUsd, country.iso2, country.snapshotDate, country.yearlyDebtDeltaTrillionsUsd]);
+  }, [country]);
 
   const liveDebt = liveDebtUsd / 1_000_000_000_000;
 
@@ -145,7 +143,7 @@ export function CountryPanel({
           <span>口径说明</span>
         </div>
         <p className="source-line">
-          {country.sourceYear} · 基准时间 {new Date(country.snapshotDate).toISOString().slice(0, 10)} · {country.sourceNote}
+          {getSourceLine(country)}
         </p>
       </div>
     </aside>
