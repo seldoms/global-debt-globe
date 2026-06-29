@@ -1,0 +1,67 @@
+import type { DebtCountry } from "../data/countries";
+import {
+  formatCurrencyTrillions,
+  formatDebtTrillions,
+  formatDebtPerSecond,
+  formatPercent,
+  yearlyDeltaToPerSecond,
+} from "../lib/format";
+
+export function TopTwentyTable({
+  countries,
+  selectedIso,
+  onSelect,
+}: {
+  countries: DebtCountry[];
+  selectedIso: string;
+  onSelect: (country: DebtCountry) => void;
+}) {
+  return (
+    <section className="table-mode">
+      <div className="table-heading">
+        <div>
+          <p>Top 30 nominal GDP economies</p>
+          <h2>全球国债快照排行</h2>
+        </div>
+        <span>点击任意国家进入详情</span>
+      </div>
+      <div className="debt-table-wrap">
+        <table className="debt-table">
+          <thead>
+            <tr>
+              <th>排名</th>
+              <th>国家</th>
+              <th>GDP</th>
+              <th>政府负债</th>
+              <th>债务/GDP</th>
+              <th>每秒负债增加</th>
+              <th>财政余额/GDP</th>
+            </tr>
+          </thead>
+          <tbody>
+            {countries.map((country) => (
+              <tr
+                key={country.iso2}
+                className={country.iso2 === selectedIso ? "is-selected" : ""}
+                onClick={() => onSelect(country)}
+              >
+                <td>#{country.rank}</td>
+                <td>
+                  <span className="country-cell">
+                    <span>{country.flag}</span>
+                    {country.name}
+                  </span>
+                </td>
+                <td>{formatCurrencyTrillions(country.gdpTrillionsUsd)}</td>
+                <td>{formatDebtTrillions(country.debtTrillionsUsd)}</td>
+                <td>{formatPercent(country.debtToGdpPercent)}</td>
+                <td>-{formatDebtPerSecond(yearlyDeltaToPerSecond(country.yearlyDebtDeltaTrillionsUsd))}</td>
+                <td>{formatPercent(country.fiscalBalancePercentGdp)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}

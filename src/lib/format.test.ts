@@ -1,0 +1,28 @@
+import { describe, expect, it } from "vitest";
+import {
+  formatCurrencyTrillions,
+  formatDebtTrillions,
+  formatFullUsd,
+  formatLiabilityUsd,
+  formatDebtPerSecond,
+  formatPercent,
+  yearlyDeltaToPerSecond,
+} from "./format";
+
+describe("debt formatting helpers", () => {
+  it("formats trillion-dollar values in Chinese UI copy", () => {
+    expect(formatCurrencyTrillions(36.2)).toBe("36.20 万亿美元");
+    expect(formatFullUsd(36_220_000_057_712)).toBe("$36,220,000,057,712");
+    expect(formatDebtTrillions(36.2)).toBe("-36.20 万亿美元");
+    expect(formatLiabilityUsd(36_220_000_057_712)).toBe("-$36,220,000,057,712");
+  });
+
+  it("formats yearly debt delta as per-second growth", () => {
+    expect(yearlyDeltaToPerSecond(0.31536)).toBe(10000);
+    expect(formatDebtPerSecond(10000)).toBe("10,000 美元/秒");
+  });
+
+  it("formats ratio percentages", () => {
+    expect(formatPercent(124.3)).toBe("124.3%");
+  });
+});
