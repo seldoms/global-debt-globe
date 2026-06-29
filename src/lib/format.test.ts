@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  estimateLiveDebtUsd,
   formatCurrencyTrillions,
   formatDebtTrillions,
   formatFullUsd,
@@ -20,6 +21,17 @@ describe("debt formatting helpers", () => {
   it("formats yearly debt delta as per-second growth", () => {
     expect(yearlyDeltaToPerSecond(0.31536)).toBe(10000);
     expect(formatDebtPerSecond(10000)).toBe("10,000 美元/秒");
+  });
+
+  it("estimates live debt from the snapshot date instead of page load time", () => {
+    expect(
+      estimateLiveDebtUsd({
+        baseDebtTrillionsUsd: 1,
+        yearlyDeltaTrillionsUsd: 0.31536,
+        snapshotDate: "2026-01-01T00:00:00Z",
+        now: new Date("2026-01-01T00:00:10Z"),
+      }),
+    ).toBe(1_000_000_100_000);
   });
 
   it("formats ratio percentages", () => {

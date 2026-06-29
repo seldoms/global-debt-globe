@@ -2,6 +2,7 @@ import { ArrowUpRight, BadgeDollarSign } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { DebtCountry } from "../data/countries";
 import {
+  estimateLiveDebtUsd,
   formatCurrencyTrillions,
   formatDebtTrillions,
   formatDebtPerSecond,
@@ -21,20 +22,34 @@ export function CountryPanel({
     () => yearlyDeltaToPerSecond(country.yearlyDebtDeltaTrillionsUsd),
     [country.yearlyDebtDeltaTrillionsUsd],
   );
-  const [extraDebt, setExtraDebt] = useState(0);
+  const [liveDebtUsd, setLiveDebtUsd] = useState(() =>
+    estimateLiveDebtUsd({
+      baseDebtTrillionsUsd: country.debtTrillionsUsd,
+      yearlyDeltaTrillionsUsd: country.yearlyDebtDeltaTrillionsUsd,
+      snapshotDate: country.snapshotDate,
+    }),
+  );
 
   useEffect(() => {
-    setExtraDebt(0);
-    const startedAt = Date.now();
+    const updateLiveDebt = () => {
+      setLiveDebtUsd(
+        estimateLiveDebtUsd({
+          baseDebtTrillionsUsd: country.debtTrillionsUsd,
+          yearlyDeltaTrillionsUsd: country.yearlyDebtDeltaTrillionsUsd,
+          snapshotDate: country.snapshotDate,
+        }),
+      );
+    };
+
+    updateLiveDebt();
     const timer = window.setInterval(() => {
-      setExtraDebt(((Date.now() - startedAt) / 1000) * perSecond);
+      updateLiveDebt();
     }, 80);
 
     return () => window.clearInterval(timer);
-  }, [perSecond, country.iso2]);
+  }, [country.debtTrillionsUsd, country.iso2, country.snapshotDate, country.yearlyDebtDeltaTrillionsUsd]);
 
-  const liveDebt = country.debtTrillionsUsd + extraDebt / 1_000_000_000_000;
-  const liveDebtUsd = country.debtTrillionsUsd * 1_000_000_000_000 + extraDebt;
+  const liveDebt = liveDebtUsd / 1_000_000_000_000;
 
   return (
     <aside className="country-panel" aria-live="polite">
@@ -82,7 +97,9 @@ export function CountryPanel({
         <ArrowUpRight size={17} />
       </button>
 
-      <p className="source-line">{country.sourceYear} · {country.sourceNote}</p>
+      <p className="source-line">
+        {country.sourceYear} · 基准时间 {new Date(country.snapshotDate).toISOString().slice(0, 10)} · {country.sourceNote}
+      </p>
     </aside>
   );
 }

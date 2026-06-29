@@ -17,6 +17,7 @@ describe("country debt snapshot", () => {
       expect(country.gdpTrillionsUsd).toBeGreaterThan(0);
       expect(country.debtTrillionsUsd).toBeGreaterThan(0);
       expect(country.debtToGdpPercent).toBeGreaterThan(0);
+      expect(Number.isNaN(new Date(country.snapshotDate).getTime())).toBe(false);
     }
   });
 
