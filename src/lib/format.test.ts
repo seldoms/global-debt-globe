@@ -3,6 +3,7 @@ import {
   estimateLiveDebtFromUsdSource,
   estimateLiveDebtUsd,
   estimatePersistedLiveDebtUsd,
+  estimateSecondTickerUsd,
   formatDebtCompactZh,
   formatCurrencyTrillions,
   formatDebtTrillions,
@@ -24,6 +25,12 @@ describe("debt formatting helpers", () => {
   it("formats yearly debt delta as per-second growth", () => {
     expect(yearlyDeltaToPerSecond(0.31536)).toBe(10000);
     expect(formatDebtPerSecond(10000)).toBe("10,000 美元/秒");
+  });
+
+  it("estimates the rolling amount accrued within the current second", () => {
+    expect(estimateSecondTickerUsd(10000, new Date("2026-01-01T00:00:00.000Z"))).toBe(0);
+    expect(estimateSecondTickerUsd(10000, new Date("2026-01-01T00:00:00.250Z"))).toBe(2500);
+    expect(estimateSecondTickerUsd(10000, new Date("2026-01-01T00:00:00.999Z"))).toBe(9990);
   });
 
   it("estimates live debt from the snapshot date instead of page load time", () => {

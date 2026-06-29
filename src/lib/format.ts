@@ -8,6 +8,10 @@ export function perSecondToYearlyDeltaTrillions(perSecondUsd: number): number {
   return (perSecondUsd * SECONDS_PER_YEAR) / 1_000_000_000_000;
 }
 
+export function estimateSecondTickerUsd(perSecondUsd: number, now = new Date()): number {
+  return Math.floor(perSecondUsd * (now.getMilliseconds() / 1000));
+}
+
 export function estimateLiveDebtUsd({
   baseDebtTrillionsUsd,
   yearlyDeltaTrillionsUsd,

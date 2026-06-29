@@ -6,9 +6,9 @@ import {
   getDebtPerSecondUsd,
 } from "../lib/debt";
 import {
+  estimateSecondTickerUsd,
   formatCurrencyTrillions,
   formatDebtCompactZh,
-  formatDebtPerSecond,
   formatPercent,
 } from "../lib/format";
 
@@ -25,6 +25,7 @@ export function GlobeDebtCard({
 }) {
   const perSecond = useMemo(() => getDebtPerSecondUsd(country), [country]);
   const [liveDebtUsd, setLiveDebtUsd] = useState(() => country.debtTrillionsUsd * 1_000_000_000_000);
+  const [secondTickerUsd, setSecondTickerUsd] = useState(() => estimateSecondTickerUsd(perSecond));
 
   useEffect(() => {
     const storageKey = `${STORAGE_PREFIX}${country.iso2}`;
@@ -51,6 +52,7 @@ export function GlobeDebtCard({
       });
 
       setLiveDebtUsd(nextDebtUsd);
+      setSecondTickerUsd(estimateSecondTickerUsd(perSecond));
 
       try {
         window.localStorage.setItem(
@@ -68,7 +70,7 @@ export function GlobeDebtCard({
     updateLiveDebt();
     const timer = window.setInterval(updateLiveDebt, 80);
     return () => window.clearInterval(timer);
-  }, [country]);
+  }, [country, perSecond]);
 
   const liveDebtTrillions = liveDebtUsd / 1_000_000_000_000;
 
@@ -92,7 +94,7 @@ export function GlobeDebtCard({
           <strong>{formatDebtCompactZh(liveDebtTrillions)}</strong>
           <em>
             <i />
-            +{formatDebtPerSecond(perSecond)}
+            本秒 +{Math.round(secondTickerUsd).toLocaleString("en-US")} 美元
           </em>
         </div>
       </div>

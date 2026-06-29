@@ -61,7 +61,7 @@ console.log(JSON.stringify({
   initialDebtCardCount,
   canvasBox,
   nonBlank,
-  debtCardHasTicker: debtCardText.includes("万亿") && debtCardText.includes("美元/秒"),
+  debtCardHasTicker: debtCardText.includes("万亿") && debtCardText.includes("本秒") && debtCardText.includes("美元"),
   detailHeading,
   rowCount,
 }, null, 2));
