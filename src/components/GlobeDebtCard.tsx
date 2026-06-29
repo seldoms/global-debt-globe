@@ -90,13 +90,11 @@ export function GlobeDebtCard({
 
       <div className="globe-debt-card__ticker">
         <span>估算当前政府负债</span>
-        <div>
-          <strong>{formatDebtCompactZh(liveDebtTrillions)}</strong>
-          <em>
-            <i />
-            本秒 +{Math.round(secondTickerUsd).toLocaleString("en-US")} 美元
-          </em>
-        </div>
+        <em>
+          <i />
+          +{Math.round(secondTickerUsd).toLocaleString("en-US")} 美元
+        </em>
+        <strong>{formatDebtCompactZh(liveDebtTrillions)}</strong>
       </div>
 
       <div className="globe-debt-card__metrics">

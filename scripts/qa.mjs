@@ -5,8 +5,9 @@ const page = await browser.newPage({
   viewport: { width: 1440, height: 920 },
   deviceScaleFactor: 1,
 });
+const baseUrl = process.env.QA_BASE_URL ?? "http://localhost:5173/global-debt-globe/";
 
-await page.goto("http://localhost:5173/", { waitUntil: "networkidle" });
+await page.goto(baseUrl, { waitUntil: "networkidle" });
 await page.waitForSelector("canvas");
 await page.waitForTimeout(1500);
 
@@ -14,6 +15,7 @@ const topbarCount = await page.locator(".topbar").count();
 const countryPanelCount = await page.locator(".country-panel").count();
 const initialDebtCardCount = await page.locator(".globe-debt-card").count();
 const canvasBox = await page.locator("canvas").boundingBox();
+const initialSliderValue = await page.locator(".country-count-control input").inputValue();
 const nonBlank = await page.locator("canvas").evaluate((canvas) => {
   const gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
   return Boolean(gl) && canvas.width > 100 && canvas.height > 100;
@@ -43,9 +45,10 @@ await page.screenshot({
 await page.getByTitle("排行表").click();
 await page.waitForTimeout(300);
 const rowCount = await page.locator(".debt-table tbody tr").count();
+const tableHeading = await page.locator(".table-heading p").innerText();
 
 await page.setViewportSize({ width: 390, height: 844 });
-await page.goto("http://localhost:5173/", { waitUntil: "networkidle" });
+await page.goto(baseUrl, { waitUntil: "networkidle" });
 await page.waitForSelector("canvas");
 await page.waitForTimeout(800);
 await page.screenshot({
@@ -61,7 +64,9 @@ console.log(JSON.stringify({
   initialDebtCardCount,
   canvasBox,
   nonBlank,
-  debtCardHasTicker: debtCardText.includes("万亿") && debtCardText.includes("本秒") && debtCardText.includes("美元"),
+  initialSliderValue,
+  debtCardHasTicker: debtCardText.includes("万亿") && debtCardText.includes("+") && debtCardText.includes("美元"),
   detailHeading,
+  tableHeading,
   rowCount,
 }, null, 2));

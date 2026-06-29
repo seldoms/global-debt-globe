@@ -120,7 +120,7 @@ export function DetailMode({
 
         <div className="chart-panel comparison-panel">
           <div className="panel-title">
-            <h3>前 10 负债/GDP 对照</h3>
+            <h3>当前显示中前 10 负债/GDP 对照</h3>
           </div>
           <ResponsiveContainer width="100%" height={320}>
             <BarChart data={comparison}>

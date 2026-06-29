@@ -20,7 +20,7 @@ export function TopTwentyTable({
     <section className="table-mode">
       <div className="table-heading">
         <div>
-          <p>Top 30 nominal GDP economies</p>
+          <p>当前显示 {countries.length} 个经济体</p>
           <h2>全球国债快照排行</h2>
         </div>
         <span>点击任意国家进入详情</span>

@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { countries } from "./countries";
+import { DEFAULT_VISIBLE_COUNTRY_COUNT, countries } from "./countries";
 
 describe("country debt snapshot", () => {
-  it("contains exactly the top 30 nominal GDP economies used by the app", () => {
-    expect(countries).toHaveLength(30);
-    expect(new Set(countries.map((country) => country.rank)).size).toBe(30);
+  it("contains the broad IMF-backed country set used by the app", () => {
+    expect(countries.length).toBeGreaterThanOrEqual(180);
+    expect(DEFAULT_VISIBLE_COUNTRY_COUNT).toBe(80);
+    expect(new Set(countries.map((country) => country.rank)).size).toBe(countries.length);
     expect(countries[0].name).toBe("美国");
   });
 

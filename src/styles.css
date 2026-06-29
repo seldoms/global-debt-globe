@@ -146,8 +146,8 @@ button {
   z-index: 12;
   top: 0;
   left: 50%;
-  width: min(420px, calc(100vw - 32px));
-  height: 86px;
+  width: min(520px, calc(100vw - 32px));
+  height: 128px;
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -155,16 +155,45 @@ button {
   transform: translateX(-50%);
 }
 
-.globe-mode-switcher {
+.globe-controls {
+  display: grid;
+  width: 100%;
+  gap: 10px;
+  justify-items: center;
   opacity: 0;
   transform: translateY(-14px);
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-.globe-nav-reveal:hover .globe-mode-switcher,
-.globe-nav-reveal:focus-within .globe-mode-switcher {
+.globe-nav-reveal:hover .globe-controls,
+.globe-nav-reveal:focus-within .globe-controls {
   opacity: 1;
   transform: translateY(0);
+}
+
+.country-count-control {
+  display: grid;
+  width: min(380px, 100%);
+  gap: 8px;
+  padding: 9px 12px 10px;
+  border: 1px solid rgba(97, 203, 255, 0.2);
+  border-radius: 8px;
+  background: rgba(4, 12, 23, 0.74);
+  color: var(--muted);
+  font-size: 12px;
+  backdrop-filter: blur(18px);
+}
+
+.country-count-control span {
+  color: #dff9ff;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.country-count-control input {
+  width: 100%;
+  accent-color: var(--cyan);
+  cursor: pointer;
 }
 
 .globe-stage {
@@ -291,15 +320,9 @@ button {
   background: rgba(55, 227, 255, 0.07);
 }
 
-.globe-debt-card__ticker div {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 8px;
-}
-
 .globe-debt-card__ticker strong {
+  display: block;
+  margin-top: 8px;
   color: var(--gold);
   font-size: clamp(26px, 3vw, 40px);
   line-height: 1;
@@ -310,11 +333,11 @@ button {
 }
 
 .globe-debt-card__ticker em {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 7px;
   color: #dff9ff;
-  font-size: 13px;
+  font-size: 12px;
   font-style: normal;
   font-weight: 800;
   white-space: nowrap;
@@ -802,11 +825,11 @@ button {
   }
 
   .globe-nav-reveal {
-    height: 66px;
+    height: 112px;
     padding-top: 10px;
   }
 
-  .globe-mode-switcher {
+  .globe-controls {
     opacity: 1;
     transform: none;
   }
@@ -832,11 +855,6 @@ button {
     right: 16px;
     bottom: 16px;
     width: calc(100vw - 32px);
-  }
-
-  .globe-debt-card__ticker div {
-    align-items: flex-start;
-    flex-direction: column;
   }
 
   .country-panel {
