@@ -8,6 +8,7 @@ import {
   subsolarPointToVector,
   type SubsolarPoint,
 } from "../lib/solar";
+import { formatDebtCompactZh } from "../lib/format";
 
 type GlobeSceneProps = {
   countries: DebtCountry[];
@@ -40,15 +41,17 @@ function DebtMarker({
   onSelect: (country: DebtCountry) => void;
   onOpenDetail: (country: DebtCountry) => void;
 }) {
+  const [mountProgress, setMountProgress] = useState(0);
   const position = useMemo(
     () => latLngToVector3(country.latitude, country.longitude, globeRadius),
     [country.latitude, country.longitude],
   );
   const normal = useMemo(() => position.clone().normalize(), [position]);
   const height = 0.08 + Math.sqrt(country.debtTrillionsUsd) * 0.085;
+  const animatedHeight = Math.max(0.001, height * mountProgress);
   const midpoint = useMemo(
-    () => position.clone().add(normal.clone().multiplyScalar(height / 2)),
-    [height, normal, position],
+    () => position.clone().add(normal.clone().multiplyScalar(animatedHeight / 2)),
+    [animatedHeight, normal, position],
   );
   const quaternion = useMemo(() => {
     const q = new THREE.Quaternion();
@@ -56,6 +59,25 @@ function DebtMarker({
     return q;
   }, [normal]);
   const color = selected ? "#ffe66f" : "#30e3ff";
+
+  useEffect(() => {
+    let frame = 0;
+    const startedAt = performance.now();
+
+    const tick = (now: number) => {
+      const elapsed = now - startedAt;
+      const progress = Math.min(1, elapsed / 1400);
+      const eased = 1 - (1 - progress) * (1 - progress);
+      setMountProgress(eased);
+      if (progress < 1) {
+        frame = window.requestAnimationFrame(tick);
+      }
+    };
+
+    setMountProgress(0);
+    frame = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(frame);
+  }, [country.iso2]);
 
   return (
     <group>
@@ -71,7 +93,7 @@ function DebtMarker({
           onOpenDetail(country);
         }}
       >
-        <boxGeometry args={[selected ? 0.11 : 0.08, height, selected ? 0.11 : 0.08]} />
+        <boxGeometry args={[selected ? 0.11 : 0.08, animatedHeight, selected ? 0.11 : 0.08]} />
         <meshStandardMaterial
           color={color}
           emissive={color}
@@ -95,14 +117,17 @@ function DebtMarker({
       </mesh>
       {selected && (
         <Html
-          position={position.clone().add(normal.clone().multiplyScalar(height + 0.16))}
+          position={position.clone().add(normal.clone().multiplyScalar(animatedHeight + 0.16))}
           center
           className="globe-label"
         >
-          <button type="button" onClick={() => onOpenDetail(country)}>
-            <span>{country.flag}</span>
-            {country.name}
-          </button>
+          <div className="globe-label__stack">
+            <button type="button" onClick={() => onOpenDetail(country)}>
+              <span>{country.flag}</span>
+              {country.name}
+            </button>
+            <div className="globe-label__value">{formatDebtCompactZh(country.debtTrillionsUsd * mountProgress)}</div>
+          </div>
         </Html>
       )}
     </group>

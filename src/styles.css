@@ -160,6 +160,25 @@ button {
   box-shadow: 0 0 28px rgba(255, 230, 111, 0.18);
 }
 
+.globe-label__stack {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+
+.globe-label__value {
+  padding: 5px 10px;
+  border: 1px solid rgba(55, 227, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(8, 15, 26, 0.88);
+  color: #c8f8ff;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
 .country-panel {
   position: absolute;
   right: 28px;

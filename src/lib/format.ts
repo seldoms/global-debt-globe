@@ -71,6 +71,24 @@ export function formatDebtTrillions(value: number): string {
   return `-${formatCurrencyTrillions(Math.abs(value))}`;
 }
 
+export function formatDebtCompactZh(value: number): string {
+  const abs = Math.abs(value);
+
+  if (abs >= 1) {
+    return `-${abs.toFixed(2)} 万亿`;
+  }
+
+  if (abs >= 0.1) {
+    return `-${(abs * 10).toFixed(2)} 千亿`;
+  }
+
+  if (abs >= 0.01) {
+    return `-${(abs * 100).toFixed(2)} 百亿`;
+  }
+
+  return `-${(abs * 10000).toFixed(2)} 亿`;
+}
+
 export function formatFullUsd(value: number): string {
   return `$${Math.round(value).toLocaleString("en-US")}`;
 }

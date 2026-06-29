@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   estimateLiveDebtUsd,
   estimatePersistedLiveDebtUsd,
+  formatDebtCompactZh,
   formatCurrencyTrillions,
   formatDebtTrillions,
   formatFullUsd,
@@ -50,5 +51,12 @@ describe("debt formatting helpers", () => {
 
   it("formats ratio percentages", () => {
     expect(formatPercent(124.3)).toBe("124.3%");
+  });
+
+  it("formats compact Chinese debt units using 万亿/千亿/百亿/亿", () => {
+    expect(formatDebtCompactZh(16.65)).toBe("-16.65 万亿");
+    expect(formatDebtCompactZh(0.72)).toBe("-7.20 千亿");
+    expect(formatDebtCompactZh(0.085)).toBe("-8.50 百亿");
+    expect(formatDebtCompactZh(0.0032)).toBe("-32.00 亿");
   });
 });
