@@ -10,7 +10,8 @@ await page.goto("http://localhost:5173/", { waitUntil: "networkidle" });
 await page.waitForSelector("canvas");
 await page.waitForTimeout(1500);
 
-const title = await page.locator("h1").innerText();
+const topbarCount = await page.locator(".topbar").count();
+const countryPanelCount = await page.locator(".country-panel").count();
 const canvasBox = await page.locator("canvas").boundingBox();
 const nonBlank = await page.locator("canvas").evaluate((canvas) => {
   const gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
@@ -22,7 +23,7 @@ await page.screenshot({
   fullPage: true,
 });
 
-await page.getByTitle("图表模式").click();
+await page.locator(".globe-label button").click({ force: true });
 await page.waitForTimeout(400);
 const detailHeading = await page.locator(".detail-header h2").innerText();
 await page.screenshot({
@@ -46,7 +47,8 @@ await page.screenshot({
 await browser.close();
 
 console.log(JSON.stringify({
-  title,
+  topbarCount,
+  countryPanelCount,
   canvasBox,
   nonBlank,
   detailHeading,

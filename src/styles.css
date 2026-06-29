@@ -146,6 +146,18 @@ button {
   inset: 0;
 }
 
+.app--globe .hero-shell {
+  height: 100vh;
+  min-height: 100vh;
+}
+
+.app--globe .globe-stage {
+  position: absolute;
+  inset: 0;
+  height: 100vh;
+  min-height: 100vh;
+}
+
 .globe-stage canvas {
   touch-action: none;
 }
@@ -587,9 +599,17 @@ button {
     overflow: auto;
   }
 
+  body:has(.app--globe) {
+    overflow: hidden;
+  }
+
   .hero-shell {
     min-height: 100vh;
     height: auto;
+  }
+
+  .app--globe .hero-shell {
+    height: 100vh;
   }
 
   .topbar {
@@ -613,6 +633,12 @@ button {
     position: relative;
     height: 62vh;
     min-height: 430px;
+  }
+
+  .app--globe .globe-stage {
+    position: absolute;
+    height: 100vh;
+    min-height: 100vh;
   }
 
   .country-panel {
