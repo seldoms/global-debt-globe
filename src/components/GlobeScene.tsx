@@ -128,8 +128,8 @@ function RotatingGlobe({ children }: { children: React.ReactNode }) {
 
 function Earth() {
   const [earthMap, cloudMap] = useTexture([
-    "/textures/earth_atmos_2048.jpg",
-    "/textures/earth_clouds_1024.png",
+    `${import.meta.env.BASE_URL}textures/earth_atmos_2048.jpg`,
+    `${import.meta.env.BASE_URL}textures/earth_clouds_1024.png`,
   ]);
   const cloudRef = useRef<THREE.Mesh>(null);
 
