@@ -12,6 +12,7 @@ await page.waitForTimeout(1500);
 
 const topbarCount = await page.locator(".topbar").count();
 const countryPanelCount = await page.locator(".country-panel").count();
+const initialDebtCardCount = await page.locator(".globe-debt-card").count();
 const canvasBox = await page.locator("canvas").boundingBox();
 const nonBlank = await page.locator("canvas").evaluate((canvas) => {
   const gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
@@ -24,6 +25,14 @@ await page.screenshot({
 });
 
 await page.locator(".globe-label button").click({ force: true });
+await page.waitForSelector(".globe-debt-card");
+const debtCardText = await page.locator(".globe-debt-card").innerText();
+await page.screenshot({
+  path: "/Users/seldoms/Documents/全球国债/qa-globe-card.png",
+  fullPage: true,
+});
+
+await page.locator(".globe-debt-card__detail").click();
 await page.waitForTimeout(400);
 const detailHeading = await page.locator(".detail-header h2").innerText();
 await page.screenshot({
@@ -49,8 +58,10 @@ await browser.close();
 console.log(JSON.stringify({
   topbarCount,
   countryPanelCount,
+  initialDebtCardCount,
   canvasBox,
   nonBlank,
+  debtCardHasTicker: debtCardText.includes("万亿") && debtCardText.includes("美元/秒"),
   detailHeading,
   rowCount,
 }, null, 2));

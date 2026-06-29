@@ -124,7 +124,11 @@ function DebtMarker({
           className="globe-label"
         >
           <div className="globe-label__stack">
-            <button type="button" onClick={() => onOpenDetail(country)}>
+            <button
+              type="button"
+              onClick={() => onSelect(country)}
+              onDoubleClick={() => onOpenDetail(country)}
+            >
               <span>{country.flag}</span>
               {country.name}
             </button>

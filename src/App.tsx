@@ -1,6 +1,7 @@
 import { BarChart3, Globe2, Table2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { DetailMode } from "./components/DetailMode";
+import { GlobeDebtCard } from "./components/GlobeDebtCard";
 import { GlobeScene } from "./components/GlobeScene";
 import { TopTwentyTable } from "./components/TopTwentyTable";
 import { countries } from "./data/countries";
@@ -10,6 +11,7 @@ type ViewMode = "globe" | "detail" | "table";
 export default function App() {
   const [selectedIso, setSelectedIso] = useState("US");
   const [mode, setMode] = useState<ViewMode>("globe");
+  const [showGlobeCard, setShowGlobeCard] = useState(false);
 
   const selectedCountry = useMemo(
     () => countries.find((country) => country.iso2 === selectedIso) ?? countries[0],
@@ -60,16 +62,45 @@ export default function App() {
         )}
 
         {mode === "globe" && (
+          <div className="globe-nav-reveal">
+            <nav className="mode-switcher globe-mode-switcher" aria-label="视图切换">
+              <button className="is-active" onClick={() => setMode("globe")} type="button" title="地球模式">
+                <Globe2 size={18} />
+                <span>地球</span>
+              </button>
+              <button onClick={() => setMode("detail")} type="button" title="图表模式">
+                <BarChart3 size={18} />
+                <span>图表</span>
+              </button>
+              <button onClick={() => setMode("table")} type="button" title="排行表">
+                <Table2 size={18} />
+                <span>排行</span>
+              </button>
+            </nav>
+          </div>
+        )}
+
+        {mode === "globe" && (
           <>
             <GlobeScene
               countries={countries}
               selectedIso={selectedCountry.iso2}
-              onSelect={(country) => setSelectedIso(country.iso2)}
+              onSelect={(country) => {
+                setSelectedIso(country.iso2);
+                setShowGlobeCard(true);
+              }}
               onOpenDetail={(country) => {
                 setSelectedIso(country.iso2);
                 setMode("detail");
               }}
             />
+            {showGlobeCard && (
+              <GlobeDebtCard
+                country={selectedCountry}
+                onClose={() => setShowGlobeCard(false)}
+                onOpenDetail={() => setMode("detail")}
+              />
+            )}
           </>
         )}
 

@@ -141,6 +141,32 @@ button {
   color: var(--cyan);
 }
 
+.globe-nav-reveal {
+  position: absolute;
+  z-index: 12;
+  top: 0;
+  left: 50%;
+  width: min(420px, calc(100vw - 32px));
+  height: 86px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 14px;
+  transform: translateX(-50%);
+}
+
+.globe-mode-switcher {
+  opacity: 0;
+  transform: translateY(-14px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.globe-nav-reveal:hover .globe-mode-switcher,
+.globe-nav-reveal:focus-within .globe-mode-switcher {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .globe-stage {
   position: absolute;
   inset: 0;
@@ -189,6 +215,157 @@ button {
   line-height: 1;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
+}
+
+.globe-debt-card {
+  position: absolute;
+  z-index: 11;
+  right: 28px;
+  bottom: 28px;
+  width: min(380px, calc(100vw - 56px));
+  padding: 18px;
+  border: 1px solid rgba(97, 203, 255, 0.28);
+  border-radius: 8px;
+  background: rgba(5, 17, 31, 0.74);
+  box-shadow: 0 22px 72px rgba(0, 0, 0, 0.38);
+  backdrop-filter: blur(20px);
+}
+
+.globe-debt-card__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(142, 180, 208, 0.18);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #cfe8f8;
+}
+
+.globe-debt-card__heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-right: 34px;
+}
+
+.globe-debt-card__heading p,
+.globe-debt-card__heading h2 {
+  margin: 0;
+}
+
+.globe-debt-card__heading p,
+.globe-debt-card__ticker span,
+.globe-debt-card__metrics span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.globe-debt-card__heading h2 {
+  font-size: 24px;
+  line-height: 1.1;
+}
+
+.globe-debt-card__flag {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgba(255, 230, 111, 0.42);
+  border-radius: 50%;
+  background: rgba(255, 230, 111, 0.08);
+  font-size: 25px;
+}
+
+.globe-debt-card__ticker {
+  margin-top: 16px;
+  padding: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(55, 227, 255, 0.24);
+  border-radius: 8px;
+  background: rgba(55, 227, 255, 0.07);
+}
+
+.globe-debt-card__ticker div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.globe-debt-card__ticker strong {
+  color: var(--gold);
+  font-size: clamp(26px, 3vw, 40px);
+  line-height: 1;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 24px rgba(255, 230, 111, 0.24);
+  animation: numberPulse 0.8s ease-in-out infinite alternate;
+}
+
+.globe-debt-card__ticker em {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #dff9ff;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 800;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.globe-debt-card__ticker i {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--mint);
+  box-shadow: 0 0 14px rgba(140, 255, 122, 0.8);
+  animation: liveDot 0.9s ease-in-out infinite alternate;
+}
+
+.globe-debt-card__metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.globe-debt-card__metrics div {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid rgba(142, 180, 208, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.globe-debt-card__metrics strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.globe-debt-card__detail {
+  display: inline-flex;
+  width: 100%;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #18bddc, #ffe66f);
+  color: #031018;
+  font-weight: 800;
 }
 
 .country-panel {
@@ -624,6 +801,16 @@ button {
     justify-content: space-between;
   }
 
+  .globe-nav-reveal {
+    height: 66px;
+    padding-top: 10px;
+  }
+
+  .globe-mode-switcher {
+    opacity: 1;
+    transform: none;
+  }
+
   .mode-switcher button {
     flex: 1;
     min-width: 0;
@@ -639,6 +826,17 @@ button {
     position: absolute;
     height: 100vh;
     min-height: 100vh;
+  }
+
+  .globe-debt-card {
+    right: 16px;
+    bottom: 16px;
+    width: calc(100vw - 32px);
+  }
+
+  .globe-debt-card__ticker div {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .country-panel {
